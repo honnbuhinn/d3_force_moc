@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+#container svg{
+  border: solid;
+
+}
+
+</style>
+<head>
+</head>
+<header>
+JSON-force環境
+</header>
+<body onload="getJSON();">
+  <div>
+<div id="result">
+  JSON取得失敗
+</div>
+
+<div id="container">
+</div>
+
+<footer >
+  <input type="button" id="add" value="add"/>
+  <input type="button" id="remove" value="remove"/>
+  <input type="button" onclick="saveLocal();" value="save"/>
+  <input type="button" onclick="rollback();" value="rollback"/><br />
+
+  <input type="text" id="FileName" value="JSONファイル名を入力"/>
+  <a href="#" class="download disabled" onclick="">ダウンロード</a>
+  <br />
+
+
+  name：<input type="text" id="name" value="masako"/><br />
+  target：<input type="text" id="target" value="Eiki"/><br />
+  group(NO):<input type="text" id="group" value="1"/><br />
+  value(NO):<input type="text" id="value" value="2"/><br />
+
+
+</footer>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="./javascript/commonUtil.js"></script>
+<script src="./javascript/add0.js"></script>
+</body >

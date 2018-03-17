@@ -1,0 +1,16 @@
+{
+  "nodes": [
+    {"id": "Masato", "group": 0},
+    {"id": "Kyohei", "group": 1},
+    {"id": "Eiki", "group": 2},
+    {"id": "Ega", "group": 1},
+    {"id": "Dareka", "group": 4}
+  ],
+  "links": [
+    {"source": "Masato", "target": "Kyohei", "value": 1},
+    {"source": "Masato", "target": "Eiki", "value": 2},
+    {"source": "Masato", "target": "Ega", "value": 1},
+    {"source": "Masato", "target": "Dareka", "value": 3},
+    {"source": "Kyohei", "target": "Ega", "value": 1}
+  ]
+}
