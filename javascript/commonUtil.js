@@ -5,7 +5,7 @@ var jforce=getJSON();
 if (!(window.localStorage)) {
   alert("save未対応です。")
 }
-
+/////////////////////////////////////////////////////
 function getJSON() {
   var req = new XMLHttpRequest();		  // XMLHttpRequest オブジェクトを生成する
   req.onreadystatechange = function() {		  // XMLHttpRequest オブジェクトの状態が変化した際に呼び出されるイベントハンドラ
@@ -18,7 +18,7 @@ function getJSON() {
   return JSON.parse(req.responseText);
 }
 
-
+////////////////////////////////////////////////////
 //save to localStorage
 function saveLocal(){
   //localStorage
@@ -38,7 +38,7 @@ function saveLocal(){
 
   alert("保存成功");
 }
-
+//////////////////////////////////////////////
 //fetch from localStorage
 function rollback(){
   // readItem
@@ -51,13 +51,13 @@ function rollback(){
 ////////////////////DL用////////////////////
 var a = document.querySelector('.download');
 var fileName = document.getElementById('FileName').value;
-
+var jsonStr= JSON.stringify(jforce);
 var blob = new Blob(
-  [str],
+  [jsonStr],
   { type: 'application\/json' }
 );
 var url = URL.createObjectURL(blob);
-console.log(fileName);
 a.download = fileName+'.json';
 a.href = url;
 a.classList.remove('disabled');
+////////////////////////////////////////////

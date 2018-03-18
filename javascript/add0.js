@@ -1,4 +1,3 @@
-
 //枠の大きさ
 let width = 500;
 let height = 500;
@@ -11,7 +10,7 @@ var links = jforce.links
 var svg = d3.select("#container").append("svg")
   .attr("width", width)
   .attr("height", height);
-var  color = d3.scaleOrdinal(d3.schemeCategory10);
+var color = d3.scaleOrdinal(d3.schemeCategory10);
 
 console.log(jforce);
 var simulation = d3.forceSimulation(nodes)
@@ -44,7 +43,6 @@ function restart() {
 
   //if文でテキストの挿入をやめる
 
-
   //circleの挿入
   node1.append("circle")
     .attr("r", 5)
@@ -66,14 +64,13 @@ function restart() {
     })
     .attr("fill", "black").merge(node1);
 
-
   //nodeがくっついて動くようにする
   node1.attr("transform", function(d) {
-      return "translate(" + d.x + ", " + d.y + ")";
-    });
+    return "translate(" + d.x + ", " + d.y + ")";
+  });
 
   // Apply the general update pattern to the links.
-  link = link.data(jforce.links, function(d) {
+  link = link.data(links, function(d) {
     return d.source.id + "-" + d.target.id;
   });
   link.exit().remove();
@@ -130,23 +127,78 @@ function dragended(d) {
 }
 
 //クリックで座標取得・nodeの追加
-d3.select("svg").on("click", function() {
+d3.select("svg").on("click", function() {})
+
+//nodeの削除
+d3.select("#removeNode").on("click", function() {
+  var name = document.getElementById("removeNodeName").value
+
+  jforce = RemoveNode(jforce, name);
+  jforce = jforce;
+
+  console.log(jforce);
+  restart();
+
 })
 
-d3.select("#remove").on("click", function() {
-})
+//nodeの追加
+d3.select("#addNode").on("click", function() {
+  var name = document.getElementById("addNodeName").value
+  var target = document.getElementById("addNodeTarget").value
+  var group = document.getElementById("addNodeGroup").value
+  var value = document.getElementById("addNodeValue").value
 
-d3.select("#add").on("click", function() {
-  var name =document.getElementById("name").value
-  var target =document.getElementById("target").value
-  var group =document.getElementById("group").value
-  var value =document.getElementById("value").value
-
-  addNode={"id": name, "group": group};
-  addLink= {"source": name, "target": target, "value": value};
+  addNode = {
+    "id": name,
+    "group": group
+  };
+  addLink = {
+    "source": name,
+    "target": target,
+    "value": value
+  };
 
   jforce.nodes.push(addNode);
-  jforce.links.push(addLink);
 
+  if (searchTarget(nodes, target) === false) {
+    jforce.links.push(addLink);
+  }
+  console.log(nodes);
   restart();
-})
+});
+
+//if文でtargetがいるときを制御
+function searchTarget(nodes, target) {
+  for (var objTar in nodes) {
+    if (nodes[objTar].id === target) {
+      return false;
+    }
+  }
+  return true;
+}
+
+//if文でsourceを制御
+function RemoveNode(jforce, target) {
+  for (var objTar in jforce.nodes) {
+    if (nodes[objTar].id === target) {
+      delete nodes[objTar];
+      break;
+    }
+  }
+
+  function RemoveLine() {
+
+    //保留
+    for (var objTar in jforce.links) {
+      if (links[objTar].source.id === target) {
+        delete link[objTar];
+      }
+      if (links[objTar].target === target) {
+        delete link[objTar];
+      }
+    }
+
+    return jforce;
+  }
+
+}
