@@ -32,9 +32,10 @@ restart();
 function restart() {
 
   // Apply the general update pattern to the nodes.
-  var node2 = node1.data(jforce.nodes, function(d) {
+  var node2 = node1.data(nodes, function(d) {
     return d.id;
   });
+  console.log(node2);
   node2.exit().remove();
   node1 = node2.enter().append("g").attr("class", "nodes").call(d3.drag()
     .on("start", dragstarted)
@@ -133,8 +134,8 @@ d3.select("svg").on("click", function() {})
 d3.select("#removeNode").on("click", function() {
   var name = document.getElementById("removeNodeName").value
 
-  jforce = RemoveNode(jforce, name);
-  jforce = jforce;
+  nodes = removeNode(nodes, name);
+  links = removeLine(links,name);
 
   console.log(jforce);
   restart();
@@ -178,27 +179,30 @@ function searchTarget(nodes, target) {
 }
 
 //if文でsourceを制御
-function RemoveNode(jforce, target) {
-  for (var objTar in jforce.nodes) {
+function removeNode(nodes, target) {
+  for (var objTar in nodes) {
     if (nodes[objTar].id === target) {
-      delete nodes[objTar];
+      nodes.splice(objTar,1);
       break;
     }
   }
+  return nodes;
+}
 
-  function RemoveLine() {
+  function removeLine(links,target) {
 
     //保留
-    for (var objTar in jforce.links) {
+    for (var objTar in links) {
       if (links[objTar].source.id === target) {
-        delete link[objTar];
+        links.splice(objTar,1);
+        jforce.links=links;
       }
+      if(links[objTar] !== undefined){
       if (links[objTar].target === target) {
-        delete link[objTar];
+        links.splice(objTar,1);
+        jforce.links=links;
       }
     }
-
-    return jforce;
+    }
+    return links;
   }
-
-}
