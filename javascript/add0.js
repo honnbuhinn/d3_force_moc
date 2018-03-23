@@ -254,3 +254,15 @@ function removeLine(links, source, target) {
   }
   return links;
 }
+
+
+//未実装
+// //ズーム時の処理を設定
+// var zoomed = function() {
+//   node1.attr("transform", d3.event.transform);
+// }
+//
+// //ズームイベントをsvg要素に束縛
+// svg.call(d3.zoom()
+// 	.scaleExtent([1 / 2, 12])
+// 	.on("zoom", zoomed));
