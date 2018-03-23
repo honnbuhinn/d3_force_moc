@@ -3,8 +3,8 @@ let width = 500;
 let height = 500;
 
 //各オブジェクト
-var nodes = jforce.nodes
-var links = jforce.links
+var nodes = jforce.nodes;
+var links = jforce.links;
 
 //ほぼ不変
 var svg = d3.select("#container").append("svg")
@@ -25,7 +25,7 @@ var simulation = d3.forceSimulation(nodes)
 
 var g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
   link = g.append("g").attr("stroke", "#000").attr("stroke-width", 1.5).selectAll(".link"),
-  node1 = g.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5).selectAll(".node");
+  node1 = g.append("g").selectAll(".node");
 
 restart();
 
@@ -44,7 +44,6 @@ function restart() {
     .on("drag", dragged)
     .on("end", dragended)).merge(node2);
 
-
   //nodeにcircleの挿入
   node1.append("circle")
     .attr("r", 5)
@@ -58,18 +57,13 @@ function restart() {
       return d.id;
     })
     .attr("class", "nodeText")
+    .attr("fill", "blue")
     .attr("x", function(d) {
       return -25;
     })
     .attr("y", function(d) {
       return 25;
-    })
-    .attr("fill", "red").merge(node1);
-
-  //nodeがくっついて動くようにする
-  node1.attr("transform", function(d) {
-    return "translate(" + d.x + ", " + d.y + ")";
-  });
+    }).merge(node1);
 
   // Apply the general update pattern to the links.
   link = link.data(links, function(d) {
@@ -129,16 +123,29 @@ function dragended(d) {
 }
 
 //クリックで座標取得・nodeの追加
-d3.select("svg").on("click", function() {})
+//d3.select("svg").on("click", function() {})
 
 //nodeの削除
 d3.select("#removeNode").on("click", function() {
   var name = document.getElementById("removeNodeName").value
 
   nodes = removeNode(nodes, name);
-  links = removeLine(links, name);
+
+  links = removeLineFromSource(links, name);
+  links = removeLineFromTargets(links, name);
 
   console.log(jforce);
+  restart();
+
+})
+
+//lineの削除
+d3.select("#removeLine").on("click", function() {
+  var source = document.getElementById("removeLineName").value;
+  var target = document.getElementById("removeLineTarget").value
+
+  lines = removeLine(links, source, target)
+
   restart();
 
 })
@@ -162,12 +169,33 @@ d3.select("#addNode").on("click", function() {
 
   jforce.nodes.push(addNode);
 
+  //targetがいない状態でlink追加するとエラーになるので回避用
   if (searchTarget(nodes, target) === false) {
     jforce.links.push(addLink);
   }
   console.log(nodes);
   restart();
 });
+
+//lineの追加
+d3.select("#addLine").on("click", function() {
+  var source = document.getElementById("removeLineName").value;
+  var target = document.getElementById("removeLineTarget").value;
+  var value =document.getElementById("addLineValue").value;
+
+  addLink = {
+    "source": name,
+    "target": target,
+    "value": value
+  };
+
+//制御しなければならない
+//    jforce.links.push(addLink);
+
+
+  restart();
+
+})
 
 //if文でtargetがいるときを制御
 function searchTarget(nodes, target) {
@@ -190,19 +218,39 @@ function removeNode(nodes, target) {
   return nodes;
 }
 
-//lineを取り除く
-function removeLine(links, target) {
+//lineを取り除く：検索対象(source)（1回のみ呼び出す。idがユニークの場合）
+function removeLineFromSource(links, target) {
   for (var objTar in links) {
     if (links[objTar].source.id === target) {
       links.splice(objTar, 1);
       jforce.links = links;
+      break;
     }
-    if (links[objTar] !== undefined) {
-      if (links[objTar].target === target) {
-        links.splice(objTar, 1);
-        jforce.links = links;
-      }
+  }
+  return links;
+}
+
+//lineを取り除く：検索対象（target)（複数回呼び出す）
+function removeLineFromTargets(links, target) {
+  for (var objTar in links) {
+    if (links[objTar].target.id === target) {
+      links.splice(objTar, 1);
+      jforce.links = links;
     }
+
+  }
+  return links;
+}
+
+//lineを取り除く：検索対象（target)
+function removeLine(links, source, target) {
+  for (var objTar in links) {
+    if (links[objTar].target.id === target && links[objTar].source.id === source) {
+      links.splice(objTar, 1);
+      jforce.links = links;
+      break;
+    }
+
   }
   return links;
 }

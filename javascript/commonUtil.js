@@ -45,7 +45,7 @@ function rollback() {
   jforce = JSON.parse(str);
   nodes = jforce.nodes;
   links = jforce.links;
-  console.log(jforce);
+  
   restart();
 
 }
