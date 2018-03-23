@@ -29,22 +29,23 @@ var g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + heigh
 
 restart();
 
+//描画開始
 function restart() {
 
   // Apply the general update pattern to the nodes.
   var node2 = node1.data(nodes, function(d) {
     return d.id;
   });
-  console.log(node2);
+  //削除したデータが入ったnodeを削除する。
   node2.exit().remove();
+  //nodeを追加
   node1 = node2.enter().append("g").attr("class", "nodes").call(d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged)
     .on("end", dragended)).merge(node2);
 
-  //if文でテキストの挿入をやめる
 
-  //circleの挿入
+  //nodeにcircleの挿入
   node1.append("circle")
     .attr("r", 5)
     .attr("fill", function(d) {
@@ -52,7 +53,7 @@ function restart() {
     })
     .merge(node1);
 
-  //textの挿入
+  //nodeにtextの挿入
   node1.append("text").text(function(d) {
       return d.id;
     })
@@ -63,7 +64,7 @@ function restart() {
     .attr("y", function(d) {
       return 25;
     })
-    .attr("fill", "black").merge(node1);
+    .attr("fill", "red").merge(node1);
 
   //nodeがくっついて動くようにする
   node1.attr("transform", function(d) {
@@ -135,7 +136,7 @@ d3.select("#removeNode").on("click", function() {
   var name = document.getElementById("removeNodeName").value
 
   nodes = removeNode(nodes, name);
-  links = removeLine(links,name);
+  links = removeLine(links, name);
 
   console.log(jforce);
   restart();
@@ -182,27 +183,26 @@ function searchTarget(nodes, target) {
 function removeNode(nodes, target) {
   for (var objTar in nodes) {
     if (nodes[objTar].id === target) {
-      nodes.splice(objTar,1);
+      nodes.splice(objTar, 1);
       break;
     }
   }
   return nodes;
 }
 
-  function removeLine(links,target) {
-
-    //保留
-    for (var objTar in links) {
-      if (links[objTar].source.id === target) {
-        links.splice(objTar,1);
-        jforce.links=links;
-      }
-      if(links[objTar] !== undefined){
+//lineを取り除く
+function removeLine(links, target) {
+  for (var objTar in links) {
+    if (links[objTar].source.id === target) {
+      links.splice(objTar, 1);
+      jforce.links = links;
+    }
+    if (links[objTar] !== undefined) {
       if (links[objTar].target === target) {
-        links.splice(objTar,1);
-        jforce.links=links;
+        links.splice(objTar, 1);
+        jforce.links = links;
       }
     }
-    }
-    return links;
   }
+  return links;
+}
